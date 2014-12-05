@@ -1,0 +1,44 @@
+.mobile-calender {
+	position: absolute;
+	z-index: 9999;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: #fff;
+	font-size: 14px;
+}
+.mobile-calender-hd {
+	padding: 6px;
+	text-align: center;
+	font-size: larger;
+}
+.mobile-calender-hd,
+.mobile-calender-table thead {
+	background-color: #25a4bb;
+	color: #fff;
+}
+.mobile-calender-table {
+	border-collapse: collapse;
+	width: 100%;
+}
+.mobile-calender-table th {
+	text-align: center;
+	padding: 10px 0;
+}
+.mobile-calender-table td {
+	text-align: center;
+	padding: 5px 0;
+}
+.mobile-calender-table .cell {
+	display: block;
+	height: 2.4em;
+	width: 2.4em;
+	line-height: 2.4;
+	margin: 0 auto;
+}
+.mobile-calender-table .today .cell {
+	background-color: #25a4bb;
+	color: #fff;
+	border-radius: 100%;
+}

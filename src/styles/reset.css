@@ -1,0 +1,25 @@
+body,h1,h2,h3,h4,h5,h6,dl,dt,dd,ul,ol,li,th,td,p,form,input,button,textarea,hr,article,footer,header,menu,nav,section{margin:0; padding:0;}
+article,footer,header,nav,section{display:block;}
+table{border-collapse:collapse;border-spacing:0;}
+li,nav ul{list-style:none;}
+img{border:0;}
+input,textarea{outline-style:none;}
+input[type="text"],input[type="password"],textarea{outline-style:none;-webkit-appearance:none;}
+textarea{resize:none}
+em,i,th,var{font-style:normal;font-weight:normal;}
+a{text-decoration:none;}
+a:hover{text-decoration:none;}
+
+/*usually*/
+body{ font-family:Arial; color:#333; background:#ffffff;}
+.DX_black{ position:absolute; z-index:99; top:0px; width:100%; background:rgba(0,0,0,0.7);}
+html,body{-webkit-touch-callout:none; -webkit-user-select:none; -webkit-user-drag:none; -webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-font-smoothing:antialiased;}
+input{ -webkit-tap-highlight-color:rgba(0,0,0,0); outline:none;}
+input:focus{ outline:none;}
+select,textarea{ -webkit-tap-highlight-color:rgba(0,0,0,0);}
+a,div{ -webkit-tap-highlight-color:rgba(0,0,0,0);}
+span{ -webkit-tap-highlight-color:rgba(0,0,0,0);}
+.DX_textb{ color:#999!important;}
+.wrap{ width:320px; margin:0 auto; height:auto; background:#f7f7f7;}
+
+.hide { display: none!important;}
