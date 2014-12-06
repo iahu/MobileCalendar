@@ -6,6 +6,7 @@
 
 	Calendar.prototype = {
 		constructor: Calendar,
+		firstDayVal: 0,
 		isDate: function (d) {
 			return '[object Date]' === Object.prototype.toString.call(d);
 		},
@@ -60,10 +61,11 @@
 		getWeekInfo: function (d) {
 			d = this.isDate(d) ? d : d;
 			var day = d.getDay();
-			var firstDay = day === 0? d : this.getPrevDayInfo(d, day-1);
+			var firstDayVal = this.firstDayVal;
+			var firstDay = day === firstDayVal ? d : this.getPrevDayInfo(d, day-1);
 			var c = this.getDateInfo(firstDay);
 			var w = [c]; 
-			for (var i = 0; i < 6; i++) {
+			for (var i = firstDayVal; i < 6; i++) {
 				c = this.getNextDayInfo(c, 1);
 				w.push( c );
 			}
