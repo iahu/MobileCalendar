@@ -4,7 +4,7 @@ function TouchTo(el, minLength, one) {
     
     var startX, startY,
         __self = this,
-        lastType;
+        onmove = false;
 
     el.addEventListener('touchstart', function(e) {
         var te = e.touches[0];
@@ -16,6 +16,8 @@ function TouchTo(el, minLength, one) {
     el.addEventListener('touchmove', function(e) {
         var te = e.touches[0];
         if (!te) {return};
+        if (one && onmove) {return};
+
         var diffX = te.pageX - startX,
             diffY = te.pageY - startY,
             noop = function(){},
@@ -31,24 +33,27 @@ function TouchTo(el, minLength, one) {
         if ( Math.abs(diffX) >= Math.abs(diffY) ) {
             if ( diffX <= -minLength ) {
                 type = 'MoveLeft';
-                if (one && lastType === type) {return};
+                onmove = true;
                 __self.fire(type, createEvent(type));
             } else if (diffX >= minLength) {
                 type = 'MoveRight';
-                if (one && lastType === type) {return};
+                onmove = true;
                 __self.fire(type, createEvent(type));
             }
         } else {
             if ( diffY <= -minLength ) {
                 type = 'MoveBottom';
-                if (one && lastType === type) {return};
+                onmove = true;
                 __self.fire(type, createEvent(type));
             } else if (diffY >= minLength) {
                 type = 'MoveTop';
-                if (one && lastType === type) {return};
+                onmove = true;
                 __self.fire(type, createEvent(type));
             }
         }
+    });
+    el.addEventListener('touchend', function() {
+        onmove = false;
     });
     this.onMoveLeft = [];
     this.onMoveRight = [];
