@@ -1,8 +1,9 @@
 module.exports = '''
-<div class="mobile-calender-pane">
 	{{#if yearView}}
+	<div class="mobile-calender-pane">
 		<div class="mobile-calender-yhd">{{monthName}}</div>
 	{{else}}
+	<div class="mobile-calender-pane month-view">
 		<div class="mobile-calender-hd">
 			{{year}}/{{month}}
 		</div>

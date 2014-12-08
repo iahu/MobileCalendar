@@ -64,7 +64,7 @@
 			var firstDayVal = this.firstDayVal;
 			var firstDay = day === firstDayVal ? d : this.getPrevDayInfo(d, day-1);
 			var c = this.getDateInfo(firstDay);
-			var w = [c]; 
+			var w = [c];
 			for (var i = firstDayVal; i < 6; i++) {
 				c = this.getNextDayInfo(c, 1);
 				w.push( c );

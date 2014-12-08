@@ -1,5 +1,6 @@
-var Calendar = require('./core.js').Calendar;
+require('./lib/zepto.js');
 var Handlebars = require('./lib/handlebars.js');
+var Calendar = require('./core.js').Calendar;
 var tmpl = require('./template/calendar.coffee');
 var TouchTo = require('./TouchTo.js');
 var extend = function (out) {
@@ -14,6 +15,7 @@ var extend = function (out) {
     }
     return out;
 };
+
 function MobileCalendar(conf) {
     this.config = extend({
         startDate: new Date(),
@@ -51,8 +53,6 @@ extend(MobileCalendar.prototype, {
                 return date;
             });
         });
-        YM = null;
-        return data;
     },
     renderMonth: function(date, yearView) {
         date = date || this.config.startDate;
@@ -87,8 +87,8 @@ extend(MobileCalendar.prototype, {
     },
     afterShow: function() {
         var d = this.getDateInfo(this.today);
-        var dataset = this.el.querySelector('.mobile-calender-bt').dataset;
-        if (dataset.year === d.year && dataset.month === d.month) {
+        var table = this.el.querySelector('#mc-' + d.year+ '-' + d.month);
+        if (table) {
             var sel = '[data-date="'+[d.year,d.month,d.date].join('-') + '"]';
             var $today = this.el.querySelector(sel);
             if ($today) {
@@ -97,87 +97,143 @@ extend(MobileCalendar.prototype, {
         }
     },
     bindUI: function () {
-        this.swapeMonth();
-        this.viewAllYear();
-    },
-    swapeMonth: function () {
-        var tt = new TouchTo(this.el, 50, true);
+        var el = this.el;
+        var $el = $(el);
+        var tt = new TouchTo(el, 20, true);
         var __self = this;
-        tt.on('MoveLeft MoveRight', function(event) {
-            var d, newYear, newMonth, clsCur, clsNew, html,tmpDiv, newTable, pane;
-            pane = this.querySelector('.mobile-calender-pane');
-            if ( pane && pane.classList.contains('animated') ||
-                el.classList.contains('year-view')) {
-                return;
-            }
+        var yearView = false;
 
-            newYear = __self.currentYear;
-            if (event.type === 'MoveLeft') {
-                newMonth = (__self.currentMonth+1) % 13 || 1;
-                newYear += Math.floor((__self.currentMonth+1)/13);
 
-                clsCur = 'slideOutLeft';
-                clsNew = 'slideInRight';
-            } else {
-                newMonth = (__self.currentMonth-1) % 13 || 12;
-                newYear += Math.floor((__self.currentMonth-1 || -1)/13);
-                clsCur = 'slideOutRight';
-                clsNew = 'slideInLeft';
-            }
-            __self.currentYear = newYear;
-            __self.currentMonth = newMonth;
-
-            html = __self.renderMonth( new Date(__self.currentYear+' '+__self.currentMonth) );
-            tmpDiv = document.createElement('div');
-            tmpDiv.innerHTML = html;
-            newTable = tmpDiv.firstChild;
-            newTable.classList.add('animated');
-            newTable.classList.add(clsNew);
-            __self.el.querySelector('.mobile-calender-pane').classList.add('animated');
-            __self.el.querySelector('.mobile-calender-pane').classList.add(clsCur);
-            __self.el.appendChild( newTable );
-            __self.afterShow();
-            tmpDiv = null;
+        tt.on('moveleft moveright', function(event) {
+            __self.swapMonth.call(__self, event);
         });
 
-        function endHandler(e) {
-            var et = e.target;
-            et.classList.remove('animated');
-            if ( et.classList.contains('slideOutRight') ) {
-                et.classList.remove('slideOutRight');
-                et.remove();
-            } else if ( et.classList.contains('slideOutLeft') ) {
-                et.classList.remove('slideOutLeft');
-                et.remove();
+        tt.on('movedown', function() {
+            if ( !yearView ) {
+                __self.viewAll();
+                yearView = true;
             }
-            et.classList.remove('slideInLeft');
-            et.classList.remove('slideInRight');
-            et.classList.remove('zoomIn');
-        }
-        this.el.addEventListener('animationEnd', endHandler);
-        this.el.addEventListener('webkitAnimationEnd', endHandler);
-    },
-    viewAllYear: function () {
-        var __self = this;
-        var renderMonth = __self.renderMonth;
-        var Y = __self.currentYear;
-        var el = __self.el;
+        });
+        tt.on('moveup', function() {
+            if ( !yearView ) {
+                __self.viewCurrentMonth();
+                yearView = false;
+            }
+        });
 
-        el.addEventListener('touchstart', function(e) {
-            e.preventDefault();
-            if ( document.querySelector('.mobile-calender-hd') && 
-                document.querySelector('.mobile-calender-hd').contains(e.target) ) {
-                var html = '<div class="mobile-calender-ynum">'+Y+'</div>';
-                el.classList.add('year-view');
-                for (var i = 1; i <= 12; i++) {
-                    html += renderMonth.call(__self, new Date( Y+' '+ i), true);
+        $el.on('touchstart', '.mobile-calender-hd', function(event) {
+            event.preventDefault();
+            __self.viewAll();
+        })
+        .on('click', '.year-view .mobile-calender-pane', function(e) {
+            var ym = $(this).find('.mobile-calender-bt').attr('id').substr(3);
+            var guss = $(e.target).closest('td').data('date');
+
+            __self.viewMonth(ym, function () {
+                if (guss) {
+                    __self.setGussDate(guss);
                 }
-                el.innerHTML = html;
-                __self.afterShow();
-                html = null;
-            }
+            });
         });
-    }
+
+        this.selectDate();
+        this.killView();
+    },
+    swapMonth: function (event) {
+        var newYear, newMonth, clsCur, clsNew, html, newTable, pane,$el;
+        $el = $(this.el);
+        pane = $el.find('.mobile-calender-pane.animated');
+        if ( pane.length || $el.find('.year-view').length) {
+            return;
+        }
+
+        newYear = this.currentYear;
+        if (event.type === 'moveleft') {
+            newMonth = (this.currentMonth+1) % 13 || 1;
+            newYear += Math.floor((this.currentMonth+1)/13);
+
+            clsCur = 'slideOutLeft';
+            clsNew = 'slideInRight';
+        } else if(event.type === 'moveright') {
+            newMonth = (this.currentMonth-1) % 13 || 12;
+            newYear += Math.floor((this.currentMonth-1 || -1)/13);
+            clsCur = 'slideOutRight';
+            clsNew = 'slideInLeft';
+        }
+        this.currentYear = newYear;
+        this.currentMonth = newMonth;
+
+        html = this.renderMonth( new Date(this.currentYear+' '+this.currentMonth) );
+        
+        $(this.el.firstChild).addClass('animated kill '+clsCur);
+        newTable = $(html).addClass('animated '+ clsNew);
+        $el.append( newTable );
+        this.afterShow();
+    },
+    killView: function () {
+        var $el = $(this.el);
+        $el.on('animationEnd webkitAnimationEnd', function (e) {
+            var $et = $(e.target);
+            if ( $et.is('.kill') ) {
+                $et.remove();
+            }
+            $et.removeClass('animated slideInLeft slideInRight zoomIn slideInDown');
+        });
+    },
+    viewAll: function () {
+        var el = this.el,
+            yv = document.createElement('div'),
+            Y = this.currentYear,
+            html = '<div class="mobile-calender-ynum">'+Y+'</div>';
+        if (this.yearView) {
+            return;
+        }
+        yv.classList.add('year-view');
+        for (var i = 1; i <= 12; i++) {
+            html += this.renderMonth(new Date( Y+' '+ i), true);
+        }
+        yv.innerHTML = html;
+        el.firstChild.classList.add('animated');
+        el.firstChild.classList.add('slideOutDown');
+        el.firstChild.classList.add('kill');
+
+        el.insertBefore(yv, el.firstChild);
+        this.afterShow();
+        html = null;
+    },
+    viewMonth: function (ym, cb) {
+        ym = new Date(ym);
+        var html;
+        html = this.renderMonth( ym );
+        this.el.firstChild.classList.add('animated');
+        this.el.firstChild.classList.add('slideOutDown');
+        this.el.firstChild.classList.add('kill');
+        this.el.firstChild.insertAdjacentHTML('beforebegin', html);
+        this.afterShow();
+        if (cb && typeof cb === 'function') {
+            cb();
+        }
+    },
+    viewCurrentMonth: function () {
+        var $el = $(this.el),
+            html;
+        html = this.renderMonth( this.today );
+        html = $(html).addClass('animated slideInDown');
+        $el.find('.month-view').addClass('animated slideOutUp kill');
+        $el.append( html );
+        this.afterShow();
+    },
+    selectDate: function () {
+        var __self = this;
+        $(this.el).on('click', '.month-view .cell', function() {
+            __self.onDateSelected( $(this).parent().data('date') );
+        });
+    },
+    setGussDate: function (d) {
+        $('[data-date="'+d+'"]').addClass('guss');
+    },
+    onDateSelected: function () {},
+    onMonthSelected: function () {}
 });
 
 

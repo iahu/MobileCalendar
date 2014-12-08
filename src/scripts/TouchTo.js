@@ -20,33 +20,43 @@ function TouchTo(el, minLength, one) {
 
         var diffX = te.pageX - startX,
             diffY = te.pageY - startY,
-            noop = function(){},
             createEvent = function (type) {
-                var ev = new Event(type);
+                var ev;
+                try {
+                    if (window.CustomEvent) {
+                        ev = new CustomEvent(type);
+                    } else if ( window.Event ) {
+                        ev = new Event(type);
+                    } else {
+                        ev =  document.createEvent('Event');
+                        ev.initEvent(type, true, true);
+                    }
+                } catch(e) {
+                    ev = {type:type};
+                }
                 ev.originEvent = e;
                 ev.diffX = diffX;
                 ev.diffY = diffY;
                 return ev;
             },
             type;
-
         if ( Math.abs(diffX) >= Math.abs(diffY) ) {
             if ( diffX <= -minLength ) {
-                type = 'MoveLeft';
+                type = 'moveleft';
                 onmove = true;
                 __self.fire(type, createEvent(type));
             } else if (diffX >= minLength) {
-                type = 'MoveRight';
+                type = 'moveright';
                 onmove = true;
                 __self.fire(type, createEvent(type));
             }
         } else {
             if ( diffY <= -minLength ) {
-                type = 'MoveBottom';
+                type = 'moveup';
                 onmove = true;
                 __self.fire(type, createEvent(type));
             } else if (diffY >= minLength) {
-                type = 'MoveTop';
+                type = 'movedown';
                 onmove = true;
                 __self.fire(type, createEvent(type));
             }
@@ -55,10 +65,10 @@ function TouchTo(el, minLength, one) {
     el.addEventListener('touchend', function() {
         onmove = false;
     });
-    this.onMoveLeft = [];
-    this.onMoveRight = [];
-    this.onMoveBottom = [];
-    this.onMoveTop = [];
+    this.onmoveleft = [];
+    this.onmoveright = [];
+    this.onmoveup = [];
+    this.onmovedown = [];
 };
 
 TouchTo.prototype.isArray = function (o) {
@@ -82,6 +92,7 @@ TouchTo.prototype.on = function on(types, fn) {
     };
 };
 TouchTo.prototype.fire = function fire(types, event) {
+
     if (!types) {return;}
     var evs = types.split(' '),
         __self = this;
