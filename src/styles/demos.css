@@ -1,0 +1,13 @@
+.qu-section-box {margin: 20px 0;}
+.qu-section-box .qu-list-hd {font-size: 16px;font-weight: normal;line-height: 1;margin: 10px;}
+.qu-section-box .qu-list {background-color: #fff;border: 1px solid #aaa;border-width: 1px 0;}
+.qu-section-box.qu-section-box-single .qu-list {border-width: 1px;}
+.qu-section-box .qu-list, .qu-section-box .q-l-hd, .qu-section-box .q-l-item {margin: 0;padding: 0;font:inherit;}
+.qu-section-box .q-l-item {border-bottom: 1px solid #CACACA;padding: 12px 12px 12px 0;margin-left: 10px;}
+.qu-section-box .q-l-item:last-child {border-bottom: 0;}
+.qu-section-box.qu-section-box-blank .q-l-item {margin-left: 0;padding-top: 0;padding-left: 12px;}
+.multi-sel-box {padding: 20px 10px;white-space: nowrap;overflow-x: auto;}
+.multi-sel-box::-webkit-scrollbar {background: transparent; display: none; }
+.multi-sel-box:hover::-webkit-scrollbar {background: transparent; display: none; }
+
+.qu-list .arrow-r {width: 1em;font-style: normal;float: right;margin-right: 6px;color: #A0A0A0;font-size: 16px;font-family: 'icomoon';font-weight: bold;line-height: 1;-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;overflow: hidden;}
