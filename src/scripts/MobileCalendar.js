@@ -27,7 +27,7 @@ function MobileCalendar(conf) {
     }
     this.tmpl = tmpl;
     this.el = document.createElement('div');
-    this.el.className = 'mobile-calender';
+    this.el.className = 'mobile-calendar';
     this.weekNames = ['日','一','二','三','四','五','六'];
     this.monthNames = ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
     var info = this.getDateInfo(this.config.startDate);
