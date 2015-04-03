@@ -9,14 +9,15 @@ function TouchTo(el, minLength, one) {
     el.addEventListener('touchstart', function(e) {
         var te = e.touches[0];
         if (te) {
+            onmove = false;
             startX = e.touches[0].pageX;
             startY = e.touches[0].pageY;
-        };
+        }
     });
     el.addEventListener('touchmove', function(e) {
         var te = e.touches[0];
-        if (!te) {return};
-        if (one && onmove) {return};
+        if (!te) {return;}
+        if (one && onmove) {return;}
 
         var diffX = te.pageX - startX,
             diffY = te.pageY - startY,
