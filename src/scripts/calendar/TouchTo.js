@@ -11,12 +11,13 @@ function TouchTo(el, minLength, one) {
         if (te) {
             startX = e.touches[0].pageX;
             startY = e.touches[0].pageY;
-        };
+        }
+        onmove = false;
     });
     el.addEventListener('touchmove', function(e) {
         var te = e.touches[0];
-        if (!te) {return};
-        if (one && onmove) {return};
+        if (!te) {return;}
+        if (one && onmove) {return;}
 
         var diffX = te.pageX - startX,
             diffY = te.pageY - startY,
@@ -69,7 +70,7 @@ function TouchTo(el, minLength, one) {
     this.onmoveright = [];
     this.onmoveup = [];
     this.onmovedown = [];
-};
+}
 
 TouchTo.prototype.isArray = function (o) {
     return '[object Array]' === Object.prototype.toString.call(o);
@@ -128,6 +129,6 @@ TouchTo.prototype.remove = function remove(types, fn) {
     });
 };
 
-if (typeof module !== 'undefuned') {
+if (typeof module === 'object') {
     module.exports = TouchTo;
 };

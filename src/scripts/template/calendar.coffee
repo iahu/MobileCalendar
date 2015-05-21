@@ -1,20 +1,16 @@
 module.exports = '''
-	{{#if yearView}}
-	<div class="mobile-calendar-pane">
-		<div class="mobile-calendar-yhd">{{monthName}}</div>
-	{{else}}
-	<div class="mobile-calendar-pane month-view">
-		<div class="mobile-calendar-hd">
-			{{year}}/{{month}}
-		</div>
-		<table class="mobile-calendar-table mobile-calendar-ht">
-			<tr>
-				{{#each weekNames}}
-				<td>{{.}}</td>
-				{{/each}}
-			</tr>
-		</table>
-	{{/if}}
+<div class="mobile-calendar-pane month-view">
+	<div class="mobile-calendar-hd clearfix">
+		<span class="ym">{{year}}/{{month}}</span>
+		<a class="closer">&times;</a>
+	</div>
+	<table class="mobile-calendar-table mobile-calendar-ht">
+		<tr>
+			{{#each weekNames}}
+			<td>{{.}}</td>
+			{{/each}}
+		</tr>
+	</table>
 	<table class="mobile-calendar-table mobile-calendar-bt" id="mc-{{year}}-{{month}}">
 		{{#each dates}}
 			<tr>
@@ -28,4 +24,5 @@ module.exports = '''
 			</tr>
 		{{/each}}
 	</table>
+	<div class="dot-g"><i class="dot"></i><i class="dot cur"></i><i class="dot"></i></div>
 </div>''';

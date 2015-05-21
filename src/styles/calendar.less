@@ -1,9 +1,11 @@
 @themeColor: #00AFC7;
 @gussBg: orange;
 @gussFg: #fff;
+@selectedBg: #aaa;
+@selectedFg: #fff;
 
 .mobile-calendar {
-	position: absolute;
+	position: fixed;
 	z-index: 9999;
 	left: 0;
 	top: 0;
@@ -19,6 +21,7 @@
 	width: 100%;
 	height: 100%;
 	background-color: #fff;
+	overflow: hidden;
 }
 .mobile-calendar-hd {
 	padding: 6px 12px;
@@ -36,6 +39,15 @@
 .mobile-calendar-ht {
 	background-color: @themeColor;
 	color: #fff;
+}
+.mobile-calendar-hd {
+	overflow: hidden;
+	zoom: 1;
+	.ym {float: left;}
+	.closer {position: relative;z-index: 9;float: right;cursor: pointer;display: inline-block;width: 1em;text-align: center;}
+}
+.mobile-calendar-pane.animated .mobile-calendar-hd .closer {
+	display: none;
 }
 .mobile-calendar-ht td {
 	padding: 8px 0;
@@ -60,9 +72,30 @@
 		color: @gussFg;
 		border-radius: 100%;
 	}
+	.selected .cell {
+		background-color: @selectedBg;
+		color: @selectedFg;
+		border-radius: 100%;
+	}
 	.prevMonth .cell, .nextMonth .cell {
 		display: none;
 	}
+}
+.mobile-calendar .dot-g {
+	position: fixed;
+	bottom: 20px;
+	left: 50%;
+	margin-left: -16px;
+	.dot {
+		background-color: #D8D8D8;
+		display: inline-block;
+		width: 4px;
+		height: 4px;
+		margin: 0 4px;
+		border-radius: 100%;
+		vertical-align: middle;
+	}
+	.dot.cur {background-color: #D2D2D2;width: 8px;height: 8px;}
 }
 
 .year-view {
@@ -88,6 +121,9 @@
 		font-size: 12px;
 		float: left;
 		min-height: 12em;
+	}
+	.mobile-calendar-pane.slideInRight {
+		position: relative;
 	}
 	.mobile-calendar-yhd {
 		line-height: 2;
