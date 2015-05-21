@@ -1,4 +1,4 @@
-var Handlebars = require('../../lib/handlebars.js');
+var Handlebars = require('../lib/handlebars.js');
 var Calendar = require('./core.js').Calendar;
 var tmpl = require('../template/calendar.coffee');
 var TouchTo = require('./TouchTo.js');
